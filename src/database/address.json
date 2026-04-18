@@ -1,0 +1,32 @@
+{
+  "_id": "550e8400-e29b-41d4-a716-446655440000",
+  "line1": "Low street",
+  "line2": "Flat 15",
+  "city": "London",
+  "region": "South East",
+  "postalCode": "SW1A 1AA",
+  "country": "GB",
+  "updatedAt": "2026-04-15T13:42:15.540Z"
+}
+
+{
+  "_id": "660e8400-e29b-41d4-a716-446655440001",
+  "line1": "Conder Green",
+  "line2": "Flat 2A",
+  "city": "London",
+  "region": "Lancashire",
+  "postalCode": "LA2 0BC",
+  "country": "United Kingdom",
+  "updatedAt": "2026-04-15T11:35:48.347Z"
+}
+
+{
+  "_id": "770e8400-e29b-41d4-a716-446655440002",
+  "line1": "78 Broad Street",
+  "line2": "Suite 10",
+  "city": "Birmingham",
+  "region": "England",
+  "postalCode": "B1 2HF",
+  "country": "United Kingdom",
+  "updatedAt": "2026-03-19T14:40:00Z"
+}

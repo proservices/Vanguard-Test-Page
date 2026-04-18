@@ -212,3 +212,184 @@ body.locked .main-nav {
     margin-left: 0;
   }
 }
+
+/* Minimal styles for vanguard-login.html */
+.login-page {
+  margin: 0;
+  min-height: 100dvh;
+  background: #f3f3f3;
+  color: #111;
+  font-family: "Aptos", "Segoe UI", Arial, sans-serif;
+}
+
+.login-page::before,
+.login-page::after {
+  display: none;
+}
+
+.login-page .header-container {
+  position: relative;
+  height: 65px;
+  background: #c8002f;
+  overflow: hidden;
+}
+
+.login-page .header-container::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: -108px;
+  width: 378px;
+  height: 100%;
+  border-bottom-left-radius: 234px;
+  background: #ab0029;
+}
+
+.login-page .responsive-header-logo {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  height: 100%;
+  margin-left: min(16.2vw, 414px);
+  text-decoration: none;
+}
+
+.login-page .header-logo {
+  color: #fff;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 43px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.login-main {
+  padding: 42px 18px 60px;
+}
+
+.login-card {
+  width: min(705px, 100% - 18px);
+  margin: 0 auto;
+}
+
+.login-card h1 {
+  margin: 0 0 24px;
+  font-size: 48px;
+  line-height: 1.05;
+}
+
+.login-form {
+  max-width: 510px;
+}
+
+.login-form label {
+  display: block;
+  margin: 0 0 8px;
+  font-size: 27px;
+  font-weight: 600;
+}
+
+.login-form input {
+  width: 100%;
+  height: 50px;
+  box-sizing: border-box;
+  margin: 0 0 24px;
+  padding: 0 11px;
+  border: 1px solid #a4a4a4;
+  border-radius: 3px;
+  background: #fff;
+  font-size: 23px;
+}
+
+.login-form input:focus {
+  border-color: #0768d6;
+  outline: 2px solid #0768d6;
+  outline-offset: 0;
+}
+
+.login-page .forgot-link {
+  display: inline-block;
+  margin: 5px 0 27px;
+  color: #0768d6;
+  font-size: 28px;
+  font-weight: 600;
+}
+
+.login-page .btn-login,
+.login-page .btn-secondary {
+  border-radius: 999px;
+  padding: 0 32px;
+  height: 54px;
+  font-size: 27px;
+  cursor: pointer;
+}
+
+.login-page .btn-login {
+  border: 1px solid #000;
+  background: #000;
+  color: #fff;
+}
+
+.login-card hr {
+  border: 0;
+  border-top: 1px solid #d8d8d8;
+  margin: 39px 0 33px;
+}
+
+.new-user h2 {
+  margin: 0 0 21px;
+  font-size: 44px;
+  line-height: 1.1;
+}
+
+.login-page .btn-secondary {
+  border: 1px solid #9c9c9c;
+  background: #f3f3f3;
+  color: #1f1f1f;
+}
+
+@media (max-width: 980px) {
+  .login-page .responsive-header-logo {
+    margin-left: 22px;
+  }
+
+  .login-page .header-logo {
+    font-size: clamp(32px, 6.3vw, 43px);
+  }
+
+  .login-main {
+    padding: 30px 15px 45px;
+  }
+
+  .login-card h1 {
+    font-size: clamp(32px, 9vw, 48px);
+    margin-bottom: 18px;
+  }
+
+  .login-form label {
+    font-size: clamp(18px, 4.4vw, 27px);
+  }
+
+  .login-form input {
+    height: 42px;
+    margin-bottom: 18px;
+    font-size: clamp(15px, 3.6vw, 23px);
+  }
+
+  .login-page .forgot-link {
+    font-size: clamp(17px, 4.1vw, 28px);
+    margin-bottom: 21px;
+  }
+
+  .login-page .btn-login,
+  .login-page .btn-secondary {
+    height: 45px;
+    padding: 0 23px;
+    font-size: clamp(17px, 3.8vw, 27px);
+  }
+
+  .new-user h2 {
+    font-size: clamp(27px, 6.8vw, 44px);
+  }
+}
+

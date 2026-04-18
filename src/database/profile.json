@@ -1,0 +1,57 @@
+{
+  "_id": "550e8400-e29b-41d4-a716-446655440000",
+  "userId": "550e8400-e29b-41d4-a716-446655440000",
+  "firstName": "Jonathan",
+  "lastName": "Doe",
+  "email": "jonathan.doe@example.com",
+  "mobilePhone": "+44 7700 900001",
+  "homePhone": "+44 20 7946 0000",
+  "dateOfBirth": "1985-03-15",
+  "title": "Mr",
+  "clientType": "Individual",
+  "status": "Active",
+  "country": "United Kingdom",
+  "birthCity": "London",
+  "birthCountry": "United Kingdom",
+  "createdAt": "2024-01-15T10:30:00Z",
+  "updatedAt": "2025-12-20T14:45:00Z",
+  "customerId": "1234567"
+}
+
+{
+  "_id": "660e8400-e29b-41d4-a716-446655440001",
+  "userId": "660e8400-e29b-41d4-a716-446655440001",
+  "firstName": "Emily",
+  "lastName": "Smith",
+  "email": "emily.smith@example.com",
+  "mobilePhone": "+44 7700 900002",
+  "homePhone": "+44 20 7946 0001",
+  "dateOfBirth": "1990-07-22",
+  "title": "Ms",
+  "clientType": "Individual",
+  "status": "Active",
+  "country": "United Kingdom",
+  "birthCity": "Manchester",
+  "birthCountry": "United Kingdom",
+  "createdAt": "2024-03-10T09:15:00Z",
+  "updatedAt": "2025-11-18T11:20:00Z"
+}
+
+{
+  "_id": "770e8400-e29b-41d4-a716-446655440002",
+  "userId": "770e8400-e29b-41d4-a716-446655440002",
+  "firstName": "Michael",
+  "lastName": "Brown",
+  "email": "michael.brown@example.com",
+  "mobilePhone": "+44 7700 900003",
+  "homePhone": "+44 20 7946 0002",
+  "dateOfBirth": "1982-11-05",
+  "title": "Mr",
+  "clientType": "Individual",
+  "status": "Inactive",
+  "country": "United Kingdom",
+  "birthCity": "Birmingham",
+  "birthCountry": "United Kingdom",
+  "createdAt": "2023-08-25T14:00:00Z",
+  "updatedAt": "2025-10-05T16:30:00Z"
+}

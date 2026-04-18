@@ -1,0 +1,71 @@
+{
+  "_id": "550e8400-e29b-41d4-a716-446655440000",
+  "funds": [
+    {
+      "fundId": "FND-001",
+      "fundName": "Global Tech Growth Fund",
+      "isin": "IE00B4L60045",
+      "currency": "GBP",
+      "unitPrice": 325.4,
+      "dealingStatus": "Open",
+      "unitCount": "5"
+    },
+    {
+      "fundId": "FND-002",
+      "fundName": "UK Equity Index Fund",
+      "isin": "GB0002374338",
+      "currency": "GBP",
+      "unitPrice": 250.75,
+      "dealingStatus": "Open",
+      "unitCount": "7"
+    }
+  ]
+}
+
+{
+  "_id": "660e8400-e29b-41d4-a716-446655440001",
+  "funds": [
+    {
+      "fundId": "FND-003",
+      "fundName": "European Balanced Fund",
+      "isin": "LU0093579457",
+      "currency": "EUR",
+      "unitPrice": 198.25,
+      "dealingStatus": "Closed",
+      "unitCount": "3"
+    },
+    {
+      "fundId": "FND-004",
+      "fundName": "US Blue Chip Equity Fund",
+      "isin": "US78462F1030",
+      "currency": "USD",
+      "unitPrice": 412.9,
+      "dealingStatus": "Open",
+      "unitCount": "4"
+    }
+  ]
+}
+
+{
+  "_id": "770e8400-e29b-41d4-a716-446655440002",
+  "funds": [
+    {
+      "fundId": "FND-005",
+      "fundName": "Asia Pacific Opportunities Fund",
+      "isin": "SG1T75931496",
+      "currency": "USD",
+      "unitPrice": 287.6,
+      "dealingStatus": "Suspended",
+      "unitCount": "2"
+    },
+    {
+      "fundId": "FND-006",
+      "fundName": "Global Sustainable Income Fund",
+      "isin": "IE00BYVQ9K79",
+      "currency": "GBP",
+      "unitPrice": 154.3,
+      "dealingStatus": "Open",
+      "unitCount": "6"
+    }
+  ]
+}

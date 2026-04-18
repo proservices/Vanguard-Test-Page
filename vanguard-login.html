@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Vanguard Login</title>
+		<link rel="stylesheet" href="src/styles.css" />
+	</head>
+	<body class="login-page">
+		<header class="header-container">
+			<a class="responsive-header-logo" href="index.html">
+				<div class="header-logo">Vanguard</div>
+			</a>
+		</header>
+
+		<main class="login-main">
+			<section class="login-card" aria-label="Login section">
+				<h1>Log in</h1>
+
+				<form class="login-form" action="#" method="post" novalidate>
+					<label for="username">Username</label>
+					<input id="username" name="username" type="text" autocomplete="username" autofocus />
+
+					<label for="password">Password</label>
+					<input id="password" name="password" type="password" autocomplete="current-password" />
+
+					<a class="forgot-link" href="#">Forgotten your username or password?</a>
+
+					<button type="submit" class="btn-login">Log in</button>
+				</form>
+
+				<hr />
+
+				<section class="new-user" aria-label="New user section">
+					<h2>New to Vanguard?</h2>
+					<button type="button" class="btn-secondary">Open an account</button>
+				</section>
+			</section>
+		</main>
+		<script src="src/script.js"></script>
+	</body>
+</html>
