@@ -7,7 +7,10 @@
     <link rel="stylesheet" href="src/styles.css" />
   </head>
   <body>
-    <div class="top-title">Vanguard TEST Page by Genesys</div>
+    <div class="top-title">
+      <div>Vanguard TEST Page by Genesys</div>
+      <div class="top-subtitle">Internal use ONLY</div>
+    </div>
     <header class="site-header">
       <div class="header-top">
         <div class="logo">Vanguard</div>
@@ -19,16 +22,16 @@
             <a href="#">BASKET</a>
             <a href="#">OPEN AN ACCOUNT</a>
             <a href="vanguard-login.html">LOG IN</a>
-            <a href="#" class="active">PERSONAL INVESTORS v</a>
+            <a href="#" class="active">PERSONAL INVESTORS</a>
           </div>
           <input class="site-search" type="text" placeholder="Search the site" />
         </div>
       </div>
       <nav class="main-nav">
         <a href="#">Home</a>
-        <a href="#">Why Vanguard v</a>
-        <a href="#">What we offer v</a>
-        <a href="#">Investing education v</a>
+        <a href="#">Why Vanguard</a>
+        <a href="#">What we offer</a>
+        <a href="#">Investing education</a>
         <a href="#">Help and support</a>
         <a href="#">My accounts</a>
       </nav>
@@ -41,6 +44,70 @@
         <p id="gate-error" class="gate-error"></p>
       </form>
     </div>
+    <script type="text/javascript" charset="utf-8">
+      (function (global) {
+        const ACTIVE_LOGIN_ID_KEY = "active_login_id";
+        const ACTIVE_DOB_KEY = "active_dob";
+
+        function getMessengerCustomAttributes() {
+          const storedId = localStorage.getItem(ACTIVE_LOGIN_ID_KEY) || "";
+          const storedDob = localStorage.getItem(ACTIVE_DOB_KEY) || "";
+          const isLoggedIn = Boolean(storedId && storedDob);
+
+          const attributes = {
+            userLoggedIn: String(isLoggedIn),
+            userId: storedId,
+            dateOfBirth: storedDob
+          };
+
+          console.log("Messenger customAttributes", attributes);
+          return attributes;
+        }
+
+        const sdkRegistry = {
+          genesys: {
+            src: "https://apps.euw2.pure.cloud/genesys-bootstrap/genesys.min.js",
+            config: {
+              environment: "prod-euw2",
+              deploymentId: "d1514ad5-830b-4266-9cab-03eac8a179d4",
+              messaging: {
+                customAttributes: getMessengerCustomAttributes()
+              }
+            }
+          }
+        };
+
+        function loadGenesys() {
+          if (global.Genesys) return;
+
+          (function (g, e, n, es, ys) {
+            g._genesysJs = e;
+            g[e] = g[e] || function () {
+              (g[e].q = g[e].q || []).push(arguments);
+            };
+            g[e].t = 1 * new Date();
+            g[e].c = es;
+            ys = document.createElement("script");
+            ys.async = 1;
+            ys.src = n;
+            ys.charset = "utf-8";
+            ys.dataset.sdkId = "genesys-bootstrap";
+            document.head.appendChild(ys);
+          })(global, "Genesys", sdkRegistry.genesys.src, sdkRegistry.genesys.config);
+
+          global.Genesys("command", "Database.set", {
+            messaging: {
+              customAttributes: getMessengerCustomAttributes()
+            }
+          });
+        }
+
+        global.AppSDKs = {
+          registry: sdkRegistry,
+          loadGenesys
+        };
+      })(window);
+    </script>
     <script src="src/script.js"></script>
   </body>
 </html>

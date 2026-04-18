@@ -6,11 +6,6 @@ const error = document.getElementById("gate-error");
 const resetButton = document.getElementById("reset-access");
 const loginForm = document.querySelector(".login-form");
 const ACCESS_KEY = "vanguard_access_unlocked";
-const GENESYS_SRC = "https://apps.euw2.pure.cloud/genesys-bootstrap/genesys.min.js";
-const GENESYS_CONFIG = {
-	environment: "prod-euw2",
-	deploymentId: "d1514ad5-830b-4266-9cab-03eac8a179d4"
-};
 const UPDATED_PASSWORDS_KEY = "login_passwords_updated";
 const ACTIVE_LOGIN_ID_KEY = "active_login_id";
 const ACTIVE_PROFILE_KEY = "active_profile";
@@ -79,8 +74,26 @@ function hasPersonaLoginData() {
 	return PERSONA_LOGIN_KEYS.some((key) => localStorage.getItem(key));
 }
 
+function clearMessengerCustomAttributes() {
+	if (typeof window.Genesys !== "function") return;
+	const clearedAttributes = {
+		userLoggedIn: "false",
+		userId: "",
+		dateOfBirth: ""
+	};
+
+	window.Genesys("command", "Database.set", {
+		messaging: {
+			customAttributes: clearedAttributes
+		}
+	});
+
+	console.log("Messenger customAttributes cleared", clearedAttributes);
+}
+
 function clearPersonaLoginData() {
 	PERSONA_LOGIN_KEYS.forEach((key) => localStorage.removeItem(key));
+	clearMessengerCustomAttributes();
 }
 
 function setLoginButtonMode(button, mode) {
@@ -165,18 +178,11 @@ function initPersonaLogin() {
 }
 
 function loadGenesysMessenger() {
-	if (window.Genesys) return;
-	window._genesysJs = "Genesys";
-	window.Genesys = window.Genesys || function () {
-		(window.Genesys.q = window.Genesys.q || []).push(arguments);
-	};
-	window.Genesys.t = Date.now();
-	window.Genesys.c = GENESYS_CONFIG;
-	const s = document.createElement("script");
-	s.async = true;
-	s.src = GENESYS_SRC;
-	s.charset = "utf-8";
-	document.head.appendChild(s);
+	if (window.AppSDKs && typeof window.AppSDKs.loadGenesys === "function") {
+		window.AppSDKs.loadGenesys();
+		return;
+	}
+	console.warn("AppSDKs.loadGenesys is not available on this page.");
 }
 
 if (gate && gateForm && input && error) {
