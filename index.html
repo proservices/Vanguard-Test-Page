@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Test Page</title>
+    <link rel="stylesheet" href="src/styles.css" />
+  </head>
+  <body>
+    <div class="top-title">Vanguard TEST Page by Genesys</div>
+    <header class="site-header">
+      <div class="header-top">
+        <div class="logo">Vanguard</div>
+        <div class="header-action">
+          <button id="reset-access" type="button">Reset protection</button>
+        </div>
+        <div class="header-right">
+          <div class="utility-links">
+            <a href="#">BASKET</a>
+            <a href="#">OPEN AN ACCOUNT</a>
+            <a href="#">LOG IN</a>
+            <a href="#" class="active">PERSONAL INVESTORS v</a>
+          </div>
+          <input class="site-search" type="text" placeholder="Search the site" />
+        </div>
+      </div>
+      <nav class="main-nav">
+        <a href="#">Home</a>
+        <a href="#">Why Vanguard v</a>
+        <a href="#">What we offer v</a>
+        <a href="#">Investing education v</a>
+        <a href="#">Help and support</a>
+        <a href="#">My accounts</a>
+      </nav>
+    </header>
+    <div id="gate" class="gate">
+      <form id="gate-form" class="gate-modal">
+        <label for="gate-password">Enter password</label>
+        <input id="gate-password" type="password" autocomplete="off" />
+        <button type="submit">Enter</button>
+        <p id="gate-error" class="gate-error"></p>
+      </form>
+    </div>
+    <script src="src/script.js"></script>
+  </body>
+</html>
