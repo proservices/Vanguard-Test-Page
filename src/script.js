@@ -5,12 +5,18 @@ const input = document.getElementById("gate-password");
 const error = document.getElementById("gate-error");
 const resetButton = document.getElementById("reset-access");
 const loginForm = document.querySelector(".login-form");
+const loginButton = loginForm ? loginForm.querySelector(".btn-login") : null;
+const forgotLink = document.querySelector(".forgot-link");
+const credentialsModal = document.getElementById("credentials-modal");
+const credentialsList = document.getElementById("credentials-list");
 const ACCESS_KEY = "vanguard_access_unlocked";
-const UPDATED_PASSWORDS_KEY = "login_passwords_updated";
 const ACTIVE_LOGIN_ID_KEY = "active_login_id";
+const ACTIVE_NAME_KEY = "active_name";
 const ACTIVE_PROFILE_KEY = "active_profile";
 const ACTIVE_DOB_KEY = "active_dob";
-const PERSONA_LOGIN_KEYS = [UPDATED_PASSWORDS_KEY, ACTIVE_LOGIN_ID_KEY, ACTIVE_PROFILE_KEY, ACTIVE_DOB_KEY];
+const PERSONA_LOGIN_KEYS = [ACTIVE_LOGIN_ID_KEY, ACTIVE_NAME_KEY, ACTIVE_PROFILE_KEY, ACTIVE_DOB_KEY];
+const LOGIN_PASSWORDS_PATH = "src/database/login-passwords.json";
+let personaCredentials = null;
 
 function unlockPage() {
 	document.body.classList.remove("locked");
@@ -47,7 +53,7 @@ function findMatchingProfile(profiles, fullName) {
 async function updateLoginPasswordsWithId(name, password) {
 	const [profiles, loginPasswords] = await Promise.all([
 		loadJson("src/database/profile.json"),
-		loadJson("src/database/login-passwords.json")
+		loadJson(LOGIN_PASSWORDS_PATH)
 	]);
 
 	const matchedRecord = loginPasswords.find((item) => item.name.toLowerCase() === name.toLowerCase() && item.password === password);
@@ -62,8 +68,8 @@ async function updateLoginPasswordsWithId(name, password) {
 
 	matchedRecord._id = matchedProfile._id;
 	matchedRecord.dateOfBirth = matchedProfile.dateOfBirth;
-	localStorage.setItem(UPDATED_PASSWORDS_KEY, JSON.stringify(loginPasswords));
-	localStorage.setItem(ACTIVE_LOGIN_ID_KEY, matchedProfile._id);
+	localStorage.setItem(ACTIVE_LOGIN_ID_KEY, matchedProfile.userId || matchedProfile._id);
+	localStorage.setItem(ACTIVE_NAME_KEY, `${matchedProfile.firstName} ${matchedProfile.lastName}`.trim());
 	localStorage.setItem(ACTIVE_PROFILE_KEY, JSON.stringify(matchedProfile));
 	localStorage.setItem(ACTIVE_DOB_KEY, matchedProfile.dateOfBirth || "");
 
@@ -94,6 +100,12 @@ function clearMessengerCustomAttributes() {
 function clearPersonaLoginData() {
 	PERSONA_LOGIN_KEYS.forEach((key) => localStorage.removeItem(key));
 	clearMessengerCustomAttributes();
+}
+
+function setPersonaMode(mode) {
+	setLoginButtonMode(loginButton, mode);
+	const navLoginLink = document.querySelector('.utility-links a[href="vanguard-login.html"]');
+	setNavLoginMode(navLoginLink, mode);
 }
 
 function setLoginButtonMode(button, mode) {
@@ -133,13 +145,12 @@ function initPersonaLogin() {
 
 	const usernameInput = document.getElementById("username");
 	const passwordInput = document.getElementById("password");
-	const loginButton = loginForm.querySelector(".btn-login");
 	if (!usernameInput || !passwordInput) return;
 
 	if (hasPersonaLoginData()) {
-		setLoginButtonMode(loginButton, "logout");
+		setPersonaMode("logout");
 	} else {
-		setLoginButtonMode(loginButton, "login");
+		setPersonaMode("login");
 	}
 
 	if (loginButton) {
@@ -147,7 +158,7 @@ function initPersonaLogin() {
 			if (loginButton.dataset.mode !== "logout") return;
 			e.preventDefault();
 			clearPersonaLoginData();
-			setLoginButtonMode(loginButton, "login");
+			setPersonaMode("login");
 		});
 	}
 
@@ -159,7 +170,7 @@ function initPersonaLogin() {
 
 		let result;
 		try {
-			result = await updateLoginPasswordsWithId(usernameInput.value.trim(), passwordInput.value);
+			result = await usePersona(usernameInput.value.trim(), passwordInput.value);
 		} catch {
 			alert("Unable to load login data.");
 			return;
@@ -171,8 +182,6 @@ function initPersonaLogin() {
 			return;
 		}
 
-		console.log("Updated login-passwords data", result.data);
-		setLoginButtonMode(loginButton, "logout");
 		window.location.href = "index.html";
 	});
 }
@@ -183,6 +192,119 @@ function loadGenesysMessenger() {
 		return;
 	}
 	console.warn("AppSDKs.loadGenesys is not available on this page.");
+}
+
+function escapeHtml(value) {
+	return String(value).replace(/[&<>"']/g, (char) => {
+		const entities = {
+			"&": "&amp;",
+			"<": "&lt;",
+			">": "&gt;",
+			'"': "&quot;",
+			"'": "&#39;"
+		};
+		return entities[char];
+	});
+}
+
+function closeCredentialsModal() {
+	if (!credentialsModal) return;
+	credentialsModal.hidden = true;
+	document.body.style.removeProperty("overflow");
+}
+
+function fillLoginFields(name, password) {
+	const usernameInput = document.getElementById("username");
+	const passwordInput = document.getElementById("password");
+	if (!usernameInput || !passwordInput) return;
+	usernameInput.value = name;
+	passwordInput.value = password;
+	passwordInput.focus();
+	passwordInput.select();
+}
+
+async function usePersona(name, password) {
+	const result = await updateLoginPasswordsWithId(name, password);
+	if (result.ok) {
+		setPersonaMode("logout");
+	}
+	return result;
+}
+
+function renderCredentialsModal(items) {
+	if (!credentialsList) return;
+	credentialsList.innerHTML = items
+		.map(
+			(item, index) => `
+				<article class="credentials-card">
+					<h3 class="credentials-card__name">Persona ${index + 1}: ${escapeHtml(item.name)}</h3>
+					<div class="credentials-card__row">
+						<span class="credentials-card__label">Username</span>
+						<span class="credentials-card__value">${escapeHtml(item.name)}</span>
+					</div>
+					<div class="credentials-card__row">
+						<span class="credentials-card__label">Password</span>
+						<span class="credentials-card__value">${escapeHtml(item.password)}</span>
+					</div>
+					<div class="credentials-card__actions">
+						<button type="button" class="credentials-card__use" data-use-credentials="${index}">Use these details</button>
+					</div>
+				</article>
+			`
+		)
+		.join("");
+}
+
+async function openCredentialsModal() {
+	if (!credentialsModal) return;
+	if (!personaCredentials) {
+		personaCredentials = await loadJson(LOGIN_PASSWORDS_PATH);
+		renderCredentialsModal(personaCredentials);
+	}
+	credentialsModal.hidden = false;
+	document.body.style.overflow = "hidden";
+}
+
+function initForgotCredentialsModal() {
+	if (!forgotLink || !credentialsModal || !credentialsList) return;
+
+	forgotLink.addEventListener("click", async (e) => {
+		e.preventDefault();
+		try {
+			await openCredentialsModal();
+		} catch {
+			alert("Unable to load persona credentials.");
+		}
+	});
+
+	credentialsModal.addEventListener("click", async (e) => {
+		const target = e.target;
+		if (!(target instanceof Element)) return;
+
+		const closeButton = target.closest("[data-close-modal='true']");
+		if (closeButton) {
+			closeCredentialsModal();
+			return;
+		}
+
+		const useButton = target.closest("[data-use-credentials]");
+		if (!useButton || !(useButton instanceof HTMLElement)) return;
+
+		const index = Number(useButton.dataset.useCredentials);
+		const item = Number.isInteger(index) ? personaCredentials?.[index] : null;
+		if (!item) return;
+
+		fillLoginFields(item.name, item.password);
+		clearPersonaLoginData();
+		setPersonaMode("login");
+		closeCredentialsModal();
+	});
+
+	document.addEventListener("keydown", (e) => {
+		if (e.key === "Escape" && !credentialsModal.hidden) {
+			closeCredentialsModal();
+		}
+	});
 }
 
 if (gate && gateForm && input && error) {
@@ -206,6 +328,7 @@ if (gate && gateForm && input && error) {
 
 initPersonaLogin();
 initNavLoginToggle();
+initForgotCredentialsModal();
 
 if (resetButton) {
 	resetButton.addEventListener("click", async () => {

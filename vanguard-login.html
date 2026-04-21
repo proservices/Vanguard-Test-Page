@@ -37,6 +37,18 @@
 				</section>
 			</section>
 		</main>
+
+		<div class="credentials-modal" id="credentials-modal" hidden>
+			<div class="credentials-modal__backdrop" data-close-modal="true"></div>
+			<section class="credentials-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="credentials-modal-title">
+				<div class="credentials-modal__header">
+					<h2 id="credentials-modal-title">Test personas</h2>
+					<button type="button" class="credentials-modal__close" aria-label="Close credentials modal" data-close-modal="true">&times;</button>
+				</div>
+				<p class="credentials-modal__intro">Choose a persona and use those details in the login form.</p>
+				<div class="credentials-modal__list" id="credentials-list"></div>
+			</section>
+		</div>
 		<script src="src/script.js"></script>
 	</body>
 </html>
