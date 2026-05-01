@@ -28,7 +28,9 @@ Once published, users should open the site through the GitHub Pages URL and use 
 
 The main page is protected by a gate password.
 
-- Site password: `genesys0426`
+- The gate password is not stored in plain text in the repo.
+- The verification data lives in `src/database/gate-password.json` (salt + iterations + hash).
+- For the current password, ask the repo owner / maintainer.
 
 If needed, use the `Reset protection` button on the main page to clear local storage and start fresh.
 

@@ -1,4 +1,4 @@
-const PASSWORD = ["67", "65", "6e", "65", "73", "79", "73", "30", "34", "32", "36"].map((h) => String.fromCharCode(parseInt(h, 16))).join("");
+const GATE_PASSWORD_CONFIG_PATH = "src/database/gate-password.json";
 const gate = document.getElementById("gate");
 const gateForm = document.getElementById("gate-form");
 const input = document.getElementById("gate-password");
@@ -17,6 +17,72 @@ const ACTIVE_DOB_KEY = "active_dob";
 const PERSONA_LOGIN_KEYS = [ACTIVE_LOGIN_ID_KEY, ACTIVE_NAME_KEY, ACTIVE_PROFILE_KEY, ACTIVE_DOB_KEY];
 const LOGIN_PASSWORDS_PATH = "src/database/login-passwords.json";
 let personaCredentials = null;
+let gatePasswordConfig = null;
+
+function base64ToBytes(base64) {
+	const binary = atob(base64);
+	const bytes = new Uint8Array(binary.length);
+	for (let i = 0; i < binary.length; i++) {
+		bytes[i] = binary.charCodeAt(i);
+	}
+	return bytes;
+}
+
+async function getGatePasswordConfig() {
+	if (gatePasswordConfig) return gatePasswordConfig;
+	const [config] = await loadJson(GATE_PASSWORD_CONFIG_PATH);
+	gatePasswordConfig = config;
+	return gatePasswordConfig;
+}
+
+async function pbkdf2VerifyPassword(password, config) {
+	if (!window.crypto?.subtle) {
+		throw new Error("WebCrypto unavailable");
+	}
+
+	const iterations = Number(config.iterations);
+	const keyLen = Number(config.keyLen || 32);
+	if (!Number.isFinite(iterations) || iterations <= 0) {
+		throw new Error("Invalid iterations");
+	}
+	if (!Number.isFinite(keyLen) || keyLen <= 0) {
+		throw new Error("Invalid key length");
+	}
+
+	const saltBytes = base64ToBytes(String(config.saltB64 || ""));
+	const expectedBytes = base64ToBytes(String(config.hashB64 || ""));
+	if (!saltBytes.length || !expectedBytes.length) {
+		throw new Error("Invalid verifier");
+	}
+
+	const keyMaterial = await window.crypto.subtle.importKey(
+		"raw",
+		new TextEncoder().encode(password),
+		"PBKDF2",
+		false,
+		["deriveBits"]
+	);
+
+	const derivedBits = await window.crypto.subtle.deriveBits(
+		{
+			name: "PBKDF2",
+			salt: saltBytes,
+			iterations,
+			hash: "SHA-256"
+		},
+		keyMaterial,
+		keyLen * 8
+	);
+
+	const derivedBytes = new Uint8Array(derivedBits);
+	if (derivedBytes.length !== expectedBytes.length) return false;
+
+	let diff = 0;
+	for (let i = 0; i < derivedBytes.length; i++) {
+		diff |= derivedBytes[i] ^ expectedBytes[i];
+	}
+	return diff === 0;
+}
 
 function unlockPage() {
 	document.body.classList.remove("locked");
@@ -315,12 +381,25 @@ if (gate && gateForm && input && error) {
 		input.focus();
 	}
 
-	gateForm.addEventListener("submit", (e) => {
+	gateForm.addEventListener("submit", async (e) => {
 		e.preventDefault();
-		if (input.value === PASSWORD) {
+		error.textContent = "";
+
+		let ok = false;
+		try {
+			const config = await getGatePasswordConfig();
+			ok = await pbkdf2VerifyPassword(input.value, config);
+		} catch {
+			error.textContent = "Unable to verify password";
+			input.select();
+			return;
+		}
+
+		if (ok) {
 			unlockPage();
 			return;
 		}
+
 		error.textContent = "Wrong password";
 		input.select();
 	});
