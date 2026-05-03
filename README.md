@@ -32,6 +32,15 @@ The main page is protected by a gate password.
 - The verification data lives in `src/database/gate-password.json` (salt + iterations + hash).
 - For the current password, ask the repo owner / maintainer.
 
+### Reset / change the gate password
+
+If you are the maintainer, you can generate a new verifier for a password you choose:
+
+- Run: `node tools/set-gate-password.mjs`
+- Or: `node tools/set-gate-password.mjs --password "your new password"`
+
+This rewrites `src/database/gate-password.json` with a new random salt + hash (no plaintext password is stored).
+
 If needed, use the `Reset protection` button on the main page to clear local storage and start fresh.
 
 ## How login works
